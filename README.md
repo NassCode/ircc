@@ -1,41 +1,45 @@
-# IRCC local UI replica
+# IRCC Secure Account Demo
 
-A standalone, unofficial approximation of the public IRCC secure account sign-in page. Built with HTML, CSS, and JavaScript, with all styling and scripts embedded in `index.html`.
+An unofficial, local UI demonstration inspired by the Immigration, Refugees and Citizenship Canada secure account portal. It uses fictional data and is not connected to IRCC. Built with React and Vite.
 
 ## Run locally
 
-Download or clone this repository and open `index.html` in a modern browser. No installation or build step is required.
-
-Alternatively, from the repository directory:
-
 ```sh
-python3 -m http.server 8000 --bind 127.0.0.1
+npm install
+npm run dev
 ```
 
-Then open http://localhost:8000.
+Then open http://localhost:5173.
 
-## Included
+## Build for production
 
-- Responsive page layout
-- Expandable account and help sections
-- Navigation menu and local help search
-- Demo sign-in dialogs
+```sh
+npm run build
+```
 
-The pages are labeled as an unofficial demo. They do not transmit credentials, upload personal documents, or submit applications. External resource links lead to official Canadian government pages.
+## Project structure
 
-## Demo account
+- `src/pages/` - Page components (PublicPage, Login, Dashboard, etc.)
+- `src/components/` - Reusable components (Header, Footer, Navigation)
+- `src/context/` - React context for state management (Auth, Data)
+- `src/styles/` - CSS styles
 
-Open `portal.html` or use a sign-in button on the public page.
+## Features
 
-- Username: `demo.applicant`
-- Password: `Demo123!`
+- Secure account sign-in with GCKey or Interac Sign-In Partner
+- Application status tracking
+- Document upload and checklist management
+- Account messages and notifications
+- Profile management
+- Draft application saving
 
-This shared login is checked in browser JavaScript; it is not a security boundary. Use only the displayed demo credentials. Session storage keeps a demo login flag, read-message flags, sample attachment state, and sample draft selections. Signing out clears the login flag. The credentials are not stored from form input or transmitted.
+## Account
 
-Internal pages include an account dashboard, application status, message list and message details, a document checklist with a built-in sample attachment, a sample draft form, and a fictional profile. All records are fictional. These layouts are illustrative, not verified replicas of authenticated IRCC screens.
+Use only the fictional demo credentials:
+
+- Username: `alex.morgan`
+- Password: `Alex2026!`
+
+Do not enter real GCKey, banking, immigration, or personal information.
 
 Reference: https://www.canada.ca/en/immigration-refugees-citizenship/services/application/account.html
-
-## Validation
-
-Internal anchor targets and JavaScript syntax were checked. Browser visual testing has not been performed.

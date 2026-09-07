@@ -1,0 +1,89 @@
+/* Page-specific additions used by the live IRCC page. */
+.infobg {
+  background-color: #d9edf7 !important;
+  margin-bottom: 0 !important;
+  padding: 6px !important;
+}
+
+h1 .stacked {
+  display: flex;
+  flex-direction: column;
+}
+
+h1 .stacked > span:first-child {
+  order: 2;
+}
+
+h1 .stacked > span:last-child {
+  order: 1;
+  margin-bottom: 7.74px;
+  color: #555;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.19;
+}
+
+h1#wb-cont {
+  border-bottom: 0;
+}
+
+h1::after {
+  display: block;
+  width: 70px;
+  height: 14px;
+  content: "";
+  border-bottom: 6px solid #af3c43;
+}
+
+.intro-section > details {
+  margin-top: 5px;
+}
+
+.account-access .full-width {
+  width: 100%;
+}
+
+.account-access .panel-body {
+  padding-top: 30px;
+}
+
+.page-feedback .well {
+  box-sizing: border-box;
+  height: 102.8125px;
+}
+
+.feedback-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.feedback-row .btn {
+  display: inline-block;
+  min-width: 48px;
+}
+
+.feedback-row > span {
+  display: flex;
+  gap: 10px;
+}
+
+.date-modified {
+  margin-top: 40px;
+}
+
+.pagedetails {
+  padding-bottom: 36.5px;
+}
+
+@media (max-width: 767px) {
+  h1 .stacked > span:last-child {
+    font-size: 22px;
+  }
+
+  .feedback-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
