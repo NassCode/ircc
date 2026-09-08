@@ -11,6 +11,8 @@ npm run dev
 
 Then open http://localhost:5173.
 
+The development server creates `data/ircc.db` automatically and seeds the demo account. The database uses Node's built-in SQLite support, so Node.js 22.13 or newer is required and no separate database server is needed.
+
 ## Build for production
 
 ```sh
@@ -41,5 +43,7 @@ Use only the fictional demo credentials:
 - Password: `Alex2026!`
 
 Do not enter real GCKey, banking, immigration, or personal information.
+
+The SQLite file is local development data and is excluded from Git. Delete `data/ircc.db` while the development server is stopped to recreate a fresh seeded database on the next start.
 
 Reference: https://www.canada.ca/en/immigration-refugees-citizenship/services/application/account.html

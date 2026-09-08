@@ -10,14 +10,24 @@ export function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (login(username, password)) {
-      navigate('/dashboard');
-      return;
+    setError('');
+    setSubmitting(true);
+
+    try {
+      if (await login(username, password)) {
+        navigate('/dashboard');
+        return;
+      }
+      setError('The username or password is incorrect.');
+    } catch {
+      setError('The local sign-in service is unavailable. Try again.');
+    } finally {
+      setSubmitting(false);
     }
-    setError('The username or password is incorrect.');
   };
 
   return (
@@ -74,7 +84,9 @@ export function Login() {
               </div>
               <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-8">
-                  <button type="submit" class="btn btn-primary">Sign in</button>
+                  <button type="submit" class="btn btn-primary" disabled={submitting}>
+                    {submitting ? 'Signing in…' : 'Sign in'}
+                  </button>
                 </div>
               </div>
             </form>

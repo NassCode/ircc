@@ -3,10 +3,11 @@ import { AuthContext } from './AuthContextValue';
 
 function getInitialAuth() {
   try {
-    if (sessionStorage.getItem('ircc-session') === 'yes') {
+    const user = JSON.parse(sessionStorage.getItem('ircc-user'));
+    if (sessionStorage.getItem('ircc-session') === 'yes' && user) {
       return {
         signedIn: true,
-        user: { name: 'Alex Morgan', username: 'alex.morgan' },
+        user,
       };
     }
   } catch {
@@ -19,21 +20,26 @@ function getInitialAuth() {
 export function AuthProvider({ children }) {
   const [{ signedIn, user }, setAuth] = useState(getInitialAuth);
 
-  const login = (username, password) => {
-    if (username === 'alex.morgan' && password === 'Alex2026!') {
-      setAuth({
-        signedIn: true,
-        user: { name: 'Alex Morgan', username: 'alex.morgan' },
-      });
-      sessionStorage.setItem('ircc-session', 'yes');
-      return true;
-    }
-    return false;
+  const login = async (username, password) => {
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+
+    if (!response.ok) return false;
+
+    const { user: authenticatedUser } = await response.json();
+    setAuth({ signedIn: true, user: authenticatedUser });
+    sessionStorage.setItem('ircc-session', 'yes');
+    sessionStorage.setItem('ircc-user', JSON.stringify(authenticatedUser));
+    return true;
   };
 
   const logout = () => {
     setAuth({ signedIn: false, user: null });
     sessionStorage.setItem('ircc-session', 'no');
+    sessionStorage.removeItem('ircc-user');
   };
 
   return (

@@ -1,83 +1,88 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import { useData } from '../context/useData';
-import { Header } from '../components/Header';
-import { Footer } from '../components/Footer';
 
 export function Dashboard() {
-  const { user, logout } = useAuth();
-  const { messages, readMessages } = useData();
-
-  const unread = messages.filter((m) => !readMessages.has(m.id));
+  const { user } = useAuth();
+  const { application, attached, messages, readMessages } = useData();
+  const unread = messages.filter((message) => !readMessages.has(message.id));
 
   return (
-    <>
-      <Header />
-      <main property="mainContentOfPage" resource="#wb-main" typeof="WebPageElement" class="container">
-        <div class="row">
-          <div class="col-md-12">
-            <h1 property="name" id="wb-cont" dir="ltr">
-              <span>IRCC secure account</span>
-            </h1>
-          </div>
+    <main id="wb-cont" className="container portal-main">
+      <header className="portal-page-header">
+        <div>
+          <p className="eyebrow">Account overview</p>
+          <h1>Welcome back, {user?.name || 'Alex Morgan'}</h1>
+          <p>Track your visitor visa application and complete any requests from IRCC.</p>
         </div>
-
-        <div class="row">
-          <div class="col-md-12">
-            <p>
-              Welcome, {user?.name || 'Alex Morgan'}.
-            </p>
-          </div>
+        <div className="last-updated">
+          <span>Last updated</span>
+          <strong>{application.lastUpdated}</strong>
         </div>
+      </header>
 
-        <div class="row">
-          <div class="col-md-12">
-            <h2>Your applications</h2>
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title">Work permit application</h3>
-              </div>
-              <div class="panel-body">
-                <p>Application number: W000001-2026</p>
-                <p>Status: In progress</p>
-                <Link to="/status" class="btn btn-primary">View application</Link>
-              </div>
+      {!attached && (
+        <section className="action-banner" aria-labelledby="action-title">
+          <div className="action-icon" aria-hidden="true">!</div>
+          <div>
+            <p className="eyebrow">Action required</p>
+            <h2 id="action-title">Upload your updated proof of funds</h2>
+            <p>We must receive the requested document by <strong>{application.nextActionDue}</strong>.</p>
+          </div>
+          <Link className="portal-button portal-button-primary" to="/documents">Review request</Link>
+        </section>
+      )}
+
+      {attached && (
+        <section className="success-banner" role="status">
+          <strong>Document ready to submit.</strong> Review your upload in Documents.
+          <Link to="/documents">View document</Link>
+        </section>
+      )}
+
+      <div className="dashboard-grid">
+        <section className="portal-card application-card" aria-labelledby="application-title">
+          <div className="card-heading-row">
+            <div>
+              <p className="eyebrow">Active application</p>
+              <h2 id="application-title">{application.type}</h2>
             </div>
+            <span className="status-pill status-in-progress">{application.status}</span>
           </div>
-        </div>
+          <dl className="application-facts">
+            <div><dt>Application number</dt><dd>{application.number}</dd></div>
+            <div><dt>Date submitted</dt><dd>{application.submitted}</dd></div>
+            <div><dt>Purpose</dt><dd>{application.purpose}</dd></div>
+            <div><dt>Current step</dt><dd>Eligibility review</dd></div>
+          </dl>
+          <div className="compact-progress" aria-label="2 of 6 application stages complete">
+            <span style={{ width: '33%' }} />
+          </div>
+          <p className="progress-caption">2 of 6 stages complete</p>
+          <Link className="portal-button portal-button-primary" to="/status">View detailed status</Link>
+        </section>
 
-        <div class="row">
-          <div class="col-md-12">
-            <h2>Messages</h2>
-            {unread.length > 0 ? (
-              <div class="panel panel-warning">
-                <div class="panel-heading">
-                  <h3 class="panel-title">You have {unread.length} unread message{unread.length > 1 ? 's' : ''}</h3>
-                </div>
-                <div class="panel-body">
-                  <Link to="/messages" class="btn btn-primary">View messages</Link>
-                </div>
-              </div>
-            ) : (
-              <p>You have no new messages.</p>
-            )}
-          </div>
-        </div>
+        <aside className="portal-card next-steps-card" aria-labelledby="next-steps-title">
+          <p className="eyebrow">What happens next</p>
+          <h2 id="next-steps-title">Your next steps</h2>
+          <ol className="next-steps-list">
+            <li className="active"><span>1</span><div><strong>Upload requested document</strong><small>Due {application.nextActionDue}</small></div></li>
+            <li><span>2</span><div><strong>Wait for our review</strong><small>We will message you if anything else is needed.</small></div></li>
+            <li><span>3</span><div><strong>Receive a decision</strong><small>Passport instructions are sent only if approved.</small></div></li>
+          </ol>
+        </aside>
+      </div>
 
-        <div class="row">
-          <div class="col-md-12">
-            <h2>Account settings</h2>
-            <Link to="/profile" class="btn btn-default">View profile</Link>
-          </div>
+      <section className="quick-links" aria-labelledby="quick-links-title">
+        <div className="section-heading">
+          <div><p className="eyebrow">Application tools</p><h2 id="quick-links-title">Manage your application</h2></div>
         </div>
-
-        <div class="row">
-          <div class="col-md-12">
-            <button onClick={logout} class="btn btn-default">Sign out</button>
-          </div>
+        <div className="quick-link-grid">
+          <Link to="/documents"><span className="quick-link-icon" aria-hidden="true">DOC</span><strong>Documents</strong><small>{attached ? '1 upload ready' : '1 document requested'}</small></Link>
+          <Link to="/messages"><span className="quick-link-icon" aria-hidden="true">MSG</span><strong>Messages</strong><small>{unread.length} unread message{unread.length === 1 ? '' : 's'}</small></Link>
+          <Link to="/profile"><span className="quick-link-icon" aria-hidden="true">ID</span><strong>Applicant profile</strong><small>Contact and account details</small></Link>
         </div>
-      </main>
-      <Footer />
-    </>
+      </section>
+    </main>
   );
 }

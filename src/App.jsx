@@ -11,6 +11,7 @@ import { Draft } from './pages/Draft';
 import { Messages } from './pages/Messages';
 import { MessageDetail } from './pages/MessageDetail';
 import { Profile } from './pages/Profile';
+import { AccountLayout } from './components/AccountLayout';
 
 function ProtectedRoute({ children }) {
   const { signedIn } = useAuth();
@@ -28,62 +29,15 @@ function App() {
           <Routes>
             <Route path="/" element={<PublicPage />} />
             <Route path="/login" element={<Login />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/status"
-              element={
-                <ProtectedRoute>
-                  <ApplicationStatus />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/documents"
-              element={
-                <ProtectedRoute>
-                  <Documents />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/draft"
-              element={
-                <ProtectedRoute>
-                  <Draft />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/messages"
-              element={
-                <ProtectedRoute>
-                  <Messages />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/messages/:id"
-              element={
-                <ProtectedRoute>
-                  <MessageDetail />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
+            <Route element={<ProtectedRoute><AccountLayout /></ProtectedRoute>}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/status" element={<ApplicationStatus />} />
+              <Route path="/documents" element={<Documents />} />
+              <Route path="/draft" element={<Draft />} />
+              <Route path="/messages" element={<Messages />} />
+              <Route path="/messages/:id" element={<MessageDetail />} />
+              <Route path="/profile" element={<Profile />} />
+            </Route>
           </Routes>
         </BrowserRouter>
       </DataProvider>

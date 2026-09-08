@@ -1,53 +1,40 @@
 import { Link } from 'react-router-dom';
 import { useData } from '../context/useData';
-import { Header } from '../components/Header';
-import { Footer } from '../components/Footer';
 
 export function Messages() {
-  const { messages, readMessages } = useData();
+  const { application, messages, readMessages } = useData();
+  const unreadCount = messages.filter((message) => !readMessages.has(message.id)).length;
 
   return (
-    <>
-      <Header />
-      <main property="mainContentOfPage" resource="#wb-main" typeof="WebPageElement" class="container">
-        <div class="row">
-          <div class="col-md-12">
-            <h1 property="name" id="wb-cont" dir="ltr">
-              <span>Messages</span>
-            </h1>
-          </div>
+    <main id="wb-cont" className="container portal-main">
+      <header className="portal-page-header compact">
+        <div>
+          <p className="eyebrow">{application.type} · {application.number}</p>
+          <h1>Messages</h1>
+          <p>Read requests, confirmations, and decisions about your application.</p>
         </div>
+        <span className="message-total">{unreadCount} unread</span>
+      </header>
 
-        <div class="row">
-          <div class="col-md-12">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Subject</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {messages.map((m) => (
-                  <tr key={m.id}>
-                    <td>{m.date}</td>
-                    <td>
-                      <Link to={`/messages/${m.id}`}>{m.title}</Link>
-                    </td>
-                    <td>
-                      <span class={`label ${readMessages.has(m.id) ? 'label-default' : 'label-warning'}`}>
-                        {readMessages.has(m.id) ? 'Read' : 'Unread'}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </main>
-      <Footer />
-    </>
+      <section className="portal-card message-list" aria-label="Application messages">
+        {messages.map((message) => {
+          const isUnread = !readMessages.has(message.id);
+          return (
+            <Link key={message.id} to={`/messages/${message.id}`} className={`message-row ${isUnread ? 'unread' : ''}`}>
+              <span className="message-state" aria-hidden="true" />
+              <span className="message-date">{message.date}</span>
+              <span className="message-copy">
+                <strong>{message.title}</strong>
+                <small>{message.type} · {message.body}</small>
+              </span>
+              <span className={`status-pill ${isUnread ? 'status-action' : 'status-waiting'}`}>{isUnread ? 'Unread' : 'Read'}</span>
+              <span className="message-arrow" aria-hidden="true">›</span>
+            </Link>
+          );
+        })}
+      </section>
+
+      <p className="privacy-note">Messages in this demonstration are fictional. Official IRCC correspondence appears only in your real account.</p>
+    </main>
   );
 }

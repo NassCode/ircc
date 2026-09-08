@@ -1,46 +1,42 @@
-import { Link } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
-import { Header } from '../components/Header';
-import { Footer } from '../components/Footer';
+import { useData } from '../context/useData';
 
 export function Profile() {
   const { user } = useAuth();
+  const { application } = useData();
 
   return (
-    <>
-      <Header />
-      <main property="mainContentOfPage" resource="#wb-main" typeof="WebPageElement" class="container">
-        <div class="row">
-          <div class="col-md-12">
-            <h1 property="name" id="wb-cont" dir="ltr">
-              <span>Account profile</span>
-            </h1>
-          </div>
-        </div>
+    <main id="wb-cont" className="container portal-main">
+      <header className="portal-page-header compact">
+        <div><p className="eyebrow">Account settings</p><h1>Applicant profile</h1><p>Review the details associated with this demonstration account.</p></div>
+      </header>
 
-        <div class="row">
-          <div class="col-md-12">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title">Personal information</h3>
-              </div>
-              <div class="panel-body">
-                <p><strong>Name:</strong> {user?.name || 'Alex Morgan'}</p>
-                <p><strong>Username:</strong> {user?.username || 'alex.morgan'}</p>
-                <p><strong>Email:</strong> alex.morgan@example.com</p>
-                <p><strong>Preferred language:</strong> English</p>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="profile-grid">
+        <section className="portal-card" aria-labelledby="personal-title">
+          <div className="section-heading"><div><p className="eyebrow">Identity</p><h2 id="personal-title">Personal information</h2></div><span className="status-pill status-complete">Verified</span></div>
+          <dl className="profile-details">
+            <div><dt>Full name</dt><dd>{user?.name || 'Alex Morgan'}</dd></div>
+            <div><dt>Date of birth</dt><dd>March 14, 1992</dd></div>
+            <div><dt>Unique client identifier</dt><dd>{application.uci}</dd></div>
+            <div><dt>Passport number</dt><dd>••••••4821</dd></div>
+          </dl>
+        </section>
+        <section className="portal-card" aria-labelledby="contact-title">
+          <div className="section-heading"><div><p className="eyebrow">Notifications</p><h2 id="contact-title">Contact information</h2></div></div>
+          <dl className="profile-details">
+            <div><dt>Email</dt><dd>alex.morgan@example.com</dd></div>
+            <div><dt>Preferred language</dt><dd>English</dd></div>
+            <div><dt>Country of residence</dt><dd>Georgia</dd></div>
+            <div><dt>Account username</dt><dd>{user?.username || 'alex.morgan'}</dd></div>
+          </dl>
+        </section>
+      </div>
 
-        <div class="row">
-          <div class="col-md-12">
-            <Link to="/dashboard" class="btn btn-default">Back to account</Link>
-          </div>
-        </div>
-      </main>
-      <Footer />
-    </>
+      <section className="inline-alert neutral">
+        <strong>Need to report a change?</strong>
+        <span>Profile details cannot be changed in this demo. Use the official IRCC web form for a real application.</span>
+        <a href="https://www.canada.ca/en/immigration-refugees-citizenship/corporate/contact-ircc/web-form.html">Open web form</a>
+      </section>
+    </main>
   );
 }
