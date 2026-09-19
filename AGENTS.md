@@ -44,7 +44,7 @@ ircc/
 | Route | Component | Description |
 |-------|-----------|-------------|
 | `/` | `PublicPage` | Landing page with sign-in options |
-| `/login` | `Login` | Sign-in form (demo: alex.morgan / Alex2026!) |
+| `/login` | `Login` | Role-aware administrator and applicant sign-in form |
 | `/dashboard` | `Dashboard` | Account home with applications, messages |
 | `/status` | `ApplicationStatus` | Application status tracking |
 | `/documents` | `Documents` | Document checklist and upload |

@@ -1,6 +1,6 @@
-# IRCC Secure Account Demo
+# IRCC Secure Account
 
-An unofficial, local UI demonstration inspired by the Immigration, Refugees and Citizenship Canada secure account portal. It uses fictional data and is not connected to IRCC. Built with React and Vite.
+A locally hosted account-management application built with React and Vite. It is not connected to IRCC.
 
 ## Run locally
 
@@ -41,7 +41,7 @@ Administrators can assign Visitor visa, Study permit, Work permit, Work and labo
 
 ## Administrator account
 
-On a fresh database, use these local demo defaults:
+On a fresh database, use these default administrator credentials:
 
 - Username: `admin`
 - Password: `Admin2026!`

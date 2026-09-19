@@ -111,24 +111,6 @@ h1::after {
   max-width: none;
 }
 
-.demo-ribbon {
-  color: #4f3b00;
-  border-block: 1px solid #ead291;
-  background: #fff5d6;
-  font-size: 14px;
-}
-
-.demo-ribbon .container {
-  display: flex;
-  gap: 14px;
-  padding-block: 8px;
-}
-
-.demo-ribbon strong {
-  text-transform: uppercase;
-  letter-spacing: .05em;
-}
-
 .account-navigation {
   color: white;
   background: var(--portal-navy);
@@ -1277,7 +1259,6 @@ h1::after {
 }
 
 @media (max-width: 767px) {
-  .demo-ribbon .container,
   .portal-page-header,
   .action-banner,
   .success-banner,

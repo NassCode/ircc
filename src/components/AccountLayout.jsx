@@ -20,12 +20,6 @@ export function AccountLayout() {
   return (
     <div className="account-page">
       <Header />
-      <div className="demo-ribbon" role="note">
-        <div className="container">
-          <strong>Demo account</strong>
-          <span>Fictional application data—this is not an IRCC service.</span>
-        </div>
-      </div>
       <div className="account-navigation">
         <div className="container account-navigation-inner">
           <NavLink className="account-wordmark" to="/dashboard">IRCC secure account</NavLink>
