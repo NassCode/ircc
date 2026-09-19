@@ -75,7 +75,7 @@ These are already implemented and working:
 - [x] Application status tracking with timeline
 - [x] Document upload interface
 - [x] Messaging system with read/unread status
-- [x] Draft applications with persistence
+- [x] Admin-assigned applicant applications with LowDB persistence
 - [x] User profile display
 - [x] Government of Canada branding and design system
 
@@ -93,5 +93,5 @@ These are already implemented and working:
 - Use existing React + Vite + React Router stack
 - Follow Government of Canada design system (WET-BOEW) conventions
 - Maintain accessibility standards (ARIA attributes, semantic HTML)
-- Use sessionStorage for state persistence (existing pattern)
+- Use the local LowDB database as the source of truth; browser storage is not used for application data or authentication.
 - Consider creating a config file for alerts/announcements content

@@ -1,50 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { api } from '../api';
 import { AuthContext } from './AuthContextValue';
 
-function getInitialAuth() {
-  try {
-    const user = JSON.parse(sessionStorage.getItem('ircc-user'));
-    if (sessionStorage.getItem('ircc-session') === 'yes' && user) {
-      return {
-        signedIn: true,
-        user,
-      };
-    }
-  } catch {
-    // Storage can be unavailable in restricted browser contexts.
-  }
-
-  return { signedIn: false, user: null };
-}
-
 export function AuthProvider({ children }) {
-  const [{ signedIn, user }, setAuth] = useState(getInitialAuth);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api('/session').then(({ user: sessionUser }) => setUser(sessionUser)).catch(() => setUser(null)).finally(() => setLoading(false));
+  }, []);
 
   const login = async (username, password) => {
-    const response = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
-    });
-
-    if (!response.ok) return false;
-
-    const { user: authenticatedUser } = await response.json();
-    setAuth({ signedIn: true, user: authenticatedUser });
-    sessionStorage.setItem('ircc-session', 'yes');
-    sessionStorage.setItem('ircc-user', JSON.stringify(authenticatedUser));
-    return true;
+    const { user: authenticatedUser } = await api('/login', { method: 'POST', body: JSON.stringify({ username, password }) });
+    setUser(authenticatedUser);
+    return authenticatedUser;
   };
 
-  const logout = () => {
-    setAuth({ signedIn: false, user: null });
-    sessionStorage.setItem('ircc-session', 'no');
-    sessionStorage.removeItem('ircc-user');
+  const logout = async () => {
+    try { await api('/logout', { method: 'POST' }); } finally { setUser(null); }
   };
 
-  return (
-    <AuthContext.Provider value={{ signedIn, user, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ signedIn: Boolean(user), user, loading, login, logout }}>{children}</AuthContext.Provider>;
 }

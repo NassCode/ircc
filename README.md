@@ -11,7 +11,7 @@ npm run dev
 
 Then open http://localhost:5173.
 
-The development server creates `data/ircc.db` automatically and seeds the demo account. The database uses Node's built-in SQLite support, so Node.js 22.13 or newer is required and no separate database server is needed.
+The development server creates `data/ircc.json` automatically using LowDB and seeds only an administrator. No separate database server is needed.
 
 ## Build for production
 
@@ -28,22 +28,24 @@ npm run build
 
 ## Features
 
-- Secure account sign-in with GCKey or Interac Sign-In Partner
-- Application status tracking
-- Document upload and checklist management
-- Account messages and notifications
-- Profile management
-- Draft application saving
+- Role-aware administrator and applicant sign-in
+- Administrator account creation and full application record management
+- Application status tracking with editable timeline stages
+- Document-request metadata and provided-document management
+- Persistent account messages, read status, and upload metadata
+- Applicant profile display
 
-## Account
+## Administrator account
 
-Use only the fictional demo credentials:
+On a fresh database, use these local demo defaults:
 
-- Username: `alex.morgan`
-- Password: `Alex2026!`
+- Username: `admin`
+- Password: `Admin2026!`
+
+Set `ADMIN_USERNAME` and `ADMIN_PASSWORD` before the first run to override these defaults. Changing the variables later does not alter an existing database. The administrator creates applicant accounts and assigns one application to each account.
 
 Do not enter real GCKey, banking, immigration, or personal information.
 
-The SQLite file is local development data and is excluded from Git. Delete `data/ircc.db` while the development server is stopped to recreate a fresh seeded database on the next start.
+The LowDB JSON file is local development data and is excluded from Git. Delete `data/ircc.json` while the development server is stopped to recreate a fresh database on the next start. Uploaded documents are represented by metadata only; file contents are not stored.
 
 Reference: https://www.canada.ca/en/immigration-refugees-citizenship/services/application/account.html

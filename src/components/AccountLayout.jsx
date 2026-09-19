@@ -14,8 +14,8 @@ const navigation = [
 
 export function AccountLayout() {
   const { logout } = useAuth();
-  const { messages, readMessages } = useData();
-  const unreadCount = messages.filter((message) => !readMessages.has(message.id)).length;
+  const { applicant, messages, loading, error } = useData();
+  const unreadCount = messages.filter((message) => !message.readAt).length;
 
   return (
     <div className="account-page">
@@ -47,7 +47,9 @@ export function AccountLayout() {
           <button type="button" className="account-signout" onClick={logout}>Sign out</button>
         </div>
       </div>
-      <Outlet />
+      {loading && !applicant ? <main className="container portal-main"><p>Loading your application…</p></main>
+        : error ? <main className="container portal-main"><div className="inline-alert" role="alert"><strong>Your application could not be loaded.</strong><span>{error}</span></div></main>
+          : applicant ? <Outlet /> : <main className="container portal-main"><p>No applicant record is assigned to this account.</p></main>}
       <Footer />
     </div>
   );

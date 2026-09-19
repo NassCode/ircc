@@ -13,6 +13,7 @@ dist-ssr
 *.local
 .playwright-mcp/
 data/*.db*
+data/*.json
 
 # Editor directories and files
 .vscode/*
@@ -24,3 +25,5 @@ data/*.db*
 *.njsproj
 *.sln
 *.sw?
+
+draft*.txt
