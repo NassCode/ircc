@@ -4,6 +4,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { LowSync } from 'lowdb';
 import { JSONFileSync } from 'lowdb/node';
+import { getApplicationDetailFields } from '../shared/applicationTypes.js';
 
 const databasePath = process.env.IRCC_DATABASE_PATH
   ? resolve(process.env.IRCC_DATABASE_PATH)
@@ -108,12 +109,31 @@ function cleanProfile(input = {}) {
   };
 }
 
+function cleanApplicationDetails(type, input = {}) {
+  return Object.fromEntries(getApplicationDetailFields(type).map((field) => {
+    let value = input[field.key];
+    if (field.required) value = required(value, field.label);
+    if (field.type === 'date') value = optionalDate(value, field.label);
+    else if (field.type === 'number') {
+      if (value === '' || value === undefined || value === null) value = '';
+      else {
+        value = Number(value);
+        if (!Number.isInteger(value) || value < 0) throw new DatabaseError(`${field.label} must be zero or a positive whole number.`);
+      }
+    } else value = String(value || '').trim();
+    if (field.options && value && !field.options.includes(value)) throw new DatabaseError(`${field.label} contains an unsupported value.`);
+    return [field.key, value];
+  }));
+}
+
 function cleanApplication(input = {}, existing = {}) {
+  const type = required(input.type, 'Application type');
   return {
     ...existing,
-    type: required(input.type, 'Application type'), number: required(input.number, 'Application number'),
+    type, number: required(input.number, 'Application number'),
     uci: String(input.uci || '').trim(), purpose: String(input.purpose || '').trim(),
     submittedAt: optionalDate(input.submittedAt, 'Submission date'), status: required(input.status, 'Application status'),
+    details: cleanApplicationDetails(type, input.details ?? existing.details),
     lastUpdatedAt: today(), stages: existing.stages || [], documentRequests: existing.documentRequests || [],
     providedDocuments: existing.providedDocuments || [], messages: existing.messages || [],
   };

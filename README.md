@@ -35,6 +35,10 @@ npm run build
 - Persistent account messages, read status, and upload metadata
 - Applicant profile display
 
+## Application types
+
+Administrators can assign Visitor visa, Study permit, Work permit, Work and labour, Invitation, Sponsorship, or a custom type. Work and labour records include employment details. Invitation and Sponsorship records include structured information about the invited or sponsored person, including identity, citizenship, residence, passport, and relationship details.
+
 ## Administrator account
 
 On a fresh database, use these local demo defaults:

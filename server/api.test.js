@@ -50,11 +50,20 @@ test('admin and applicant lifecycle is persisted and role protected', async () =
   const applicantPayload = {
     username: 'test.applicant', password: 'Applicant2026!',
     profile: { fullName: 'Test Applicant', email: 'test@example.com', preferredLanguage: 'English' },
-    application: { type: 'Study permit', number: 'S-100', purpose: 'Study', status: 'Received', submittedAt: '2026-09-01' },
+    application: { type: 'Invitation', number: 'I-100', purpose: 'Family visit', status: 'Received', submittedAt: '2026-09-01',
+      details: { personFullName: 'Invited Person', relationship: 'Sibling', dateOfBirth: '1992-05-06', citizenship: 'French',
+        countryOfResidence: 'France', passportNumber: 'FR123456', passportExpiry: '2030-01-01',
+        invitationPurpose: 'Attend a family event.', plannedArrival: '2026-12-01', plannedDeparture: '2026-12-20' } },
   };
+  const invalidInvitation = structuredClone(applicantPayload);
+  invalidInvitation.application.details = {};
+  result = await admin('/admin/users', { method: 'POST', body: JSON.stringify(invalidInvitation) });
+  assert.equal(result.response.status, 400);
+  assert.match(result.body.error, /Full name is required/);
   result = await admin('/admin/users', { method: 'POST', body: JSON.stringify(applicantPayload) });
   assert.equal(result.response.status, 201);
   const applicantId = result.body.applicant.id;
+  assert.equal(result.body.applicant.application.details.personFullName, 'Invited Person');
 
   const duplicate = await admin('/admin/users', { method: 'POST', body: JSON.stringify(applicantPayload) });
   assert.equal(duplicate.response.status, 409);

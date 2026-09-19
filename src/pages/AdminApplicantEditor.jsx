@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { api, formatDate } from '../api';
+import { ApplicationTypeFields } from '../components/ApplicationTypeFields';
+import { ApplicationTypeSelect } from '../components/ApplicationTypeSelect';
 
 const definitions = {
   stages: {
@@ -142,6 +144,7 @@ export function AdminApplicantEditor() {
   if (!applicant) return <main className="container portal-main"><h1>Applicant unavailable</h1><div className="inline-alert" role="alert"><span>{error}</span></div><Link to="/admin">Back to applicants</Link></main>;
   const setProfile = (key, value) => setAccount((current) => ({ ...current, profile: { ...current.profile, [key]: value } }));
   const appField = (key, value) => setApplication((current) => ({ ...current, [key]: value }));
+  const applicationDetail = (key, value) => setApplication((current) => ({ ...current, details: { ...(current.details || {}), [key]: value } }));
   return <main id="wb-cont" className="container portal-main admin-editor">
     <Link className="back-link" to="/admin">← Back to applicants</Link>
     <header className="portal-page-header compact"><div><p className="eyebrow">Applicant record</p><h1>{applicant.profile.fullName}</h1><p>{applicant.application.type} · {applicant.application.number}</p></div><span className={`status-pill ${applicant.active ? 'status-complete' : 'status-waiting'}`}>{applicant.active ? 'Active' : 'Inactive'}</span></header>
@@ -158,9 +161,10 @@ export function AdminApplicantEditor() {
       <div className="form-field"><label><input type="checkbox" checked={account.active} onChange={(e) => setAccount((current) => ({ ...current, active: e.target.checked }))} /> Account active</label></div>
     </div><button className="portal-button portal-button-primary">Save account</button></form>
     <form className="portal-card admin-form-section" onSubmit={saveApplication}><h2>Application summary</h2><div className="admin-form-grid">
-      <div className="form-field"><label>Application type<input required list="application-types" value={application.type} onChange={(e) => appField('type', e.target.value)} /></label><datalist id="application-types"><option value="Visitor visa" /><option value="Study permit" /><option value="Work permit" /></datalist></div>
+      <ApplicationTypeSelect value={application.type} onChange={(type) => setApplication((current) => ({ ...current, type, details: {} }))} />
       {['number', 'uci', 'purpose', 'status'].map((key) => <EditorField key={key} definition={[key, { number: 'Application number', uci: 'UCI', purpose: 'Purpose', status: 'Overall status' }[key], 'text']} value={application[key]} onChange={appField} />)}
       <EditorField definition={['submittedAt', 'Submission date', 'date']} value={application.submittedAt} onChange={appField} />
+      <ApplicationTypeFields type={application.type} values={application.details} onChange={applicationDetail} />
     </div><button className="portal-button portal-button-primary">Save application</button></form>
     <CollectionSection applicantId={id} collection="stages" items={applicant.application.stages} onRefresh={load} />
     <CollectionSection applicantId={id} collection="document-requests" items={applicant.application.documentRequests} onRefresh={load} />
