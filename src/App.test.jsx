@@ -59,6 +59,10 @@ describe('role routing and database-backed applicant views', () => {
       return response({ error: 'Not found' }, 404);
     }));
     render(<App />);
+    const assignedApplication = await screen.findByText('Assigned application');
+    expect(assignedApplication.closest('details').open).toBe(false);
+    fireEvent.click(assignedApplication);
+    expect(assignedApplication.closest('details').open).toBe(true);
     const typeInput = await screen.findByLabelText('Application type');
     fireEvent.change(typeInput, { target: { value: 'Invitation' } });
     expect(screen.getByRole('heading', { name: 'Invited person and travel details' })).toBeTruthy();
