@@ -17,6 +17,12 @@ function localApiPlugin() {
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), localApiPlugin()],
+  server: {
+    host: '127.0.0.1',
+    allowedHosts: ['canada.ca'],
+    port: 5173,
+    strictPort: true,
+  },
   test: {
     environment: 'jsdom',
     include: ['src/**/*.test.{js,jsx}'],

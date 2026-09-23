@@ -27,3 +27,6 @@ data/*.json
 *.sw?
 
 draft*.txt
+
+# Local development certificates and private keys
+dev/nginx/certs/
